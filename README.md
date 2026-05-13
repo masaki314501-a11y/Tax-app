@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 確定申告サポートツール
 
-## Getting Started
+個人事業主向けの確定申告サポートWebアプリ
 
-First, run the development server:
+## 技術スタック
+
+- **Next.js 16** + TypeScript + App Router
+- **NextAuth.js v5** (Auth.js) + Google OAuth
+- **Supabase** (PostgreSQL)
+- **Prisma 7**（`@prisma/adapter-pg` 使用）
+- **Tailwind CSS**
+- **Anthropic SDK**（claude-opus-4-7）レシートOCR
+- **PapaParse** CSV読み込み
+
+## セットアップ
+
+### 1. 環境変数
+
+`.env` ファイルを編集して以下を設定：
+
+```env
+DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT].supabase.co:5432/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT].supabase.co:5432/postgres"
+AUTH_SECRET="openssl rand -base64 32 で生成"
+AUTH_GOOGLE_ID="Google Cloud ConsoleのOAuth クライアントID"
+AUTH_GOOGLE_SECRET="Google Cloud ConsoleのOAuth クライアントシークレット"
+ANTHROPIC_API_KEY="Anthropic APIキー"
+```
+
+### 2. DBマイグレーション
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### 3. 開発サーバー起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 機能
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 機能 | 説明 |
+|------|------|
+| Googleログイン | OAuth認証、ユーザーデータは完全分離 |
+| ダッシュボード | 年間サマリー・税額概算 |
+| 収入管理 | 収入の登録・一覧・削除 |
+| 経費管理 | 経費の登録・一覧・科目別集計 |
+| レシートスキャン | 写真→Claude AIで日付・金額・科目を自動抽出 |
+| CSV取り込み | 銀行明細CSVの一括インポート |
+| 控除入力 | 医療費・ふるさと納税等の入力 |
+| 税額試算 | 所得税・復興税・住民税の概算計算 |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 免責事項
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+本ツールの税額計算はあくまで概算です。正確な申告には税理士への相談を推奨します。
