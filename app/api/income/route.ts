@@ -43,6 +43,30 @@ export async function POST(request: NextRequest) {
   return Response.json(income)
 }
 
+export async function PATCH(request: NextRequest) {
+  const session = await auth()
+  if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })
+
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get("id")
+  if (!id) return Response.json({ error: "ID required" }, { status: 400 })
+
+  const body = await request.json()
+  const income = await prisma.income.updateMany({
+    where: { id, userId: session.user.id },
+    data: {
+      date: new Date(body.date),
+      description: body.description,
+      amount: parseInt(body.amount),
+      taxRate: parseInt(body.taxRate ?? "10"),
+      category: body.category ?? "売上",
+      memo: body.memo ?? null,
+    },
+  })
+
+  return Response.json(income)
+}
+
 export async function DELETE(request: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) return Response.json({ error: "Unauthorized" }, { status: 401 })

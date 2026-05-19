@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/toast"
 import { formatCurrency, formatDate, INCOME_CATEGORIES } from "@/lib/utils"
-import { Trash2, Plus, Download, ChevronDown, ChevronUp } from "lucide-react"
+import { Trash2, Plus, Download, ChevronDown, ChevronUp, Pencil, Copy } from "lucide-react"
 
 type Income = {
   id: string; date: string; description: string; amount: number
@@ -23,6 +23,7 @@ export default function IncomePage() {
   const [year, setYear] = useState(currentYear)
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState({
     date: new Date().toISOString().split("T")[0],
     description: "", amount: "", taxRate: "10", category: "売上", memo: "",
@@ -35,21 +36,62 @@ export default function IncomePage() {
 
   useEffect(() => { fetchIncomes() }, [fetchIncomes])
 
+  const resetForm = () => {
+    setForm({ date: new Date().toISOString().split("T")[0], description: "", amount: "", taxRate: "10", category: "売上", memo: "" })
+    setEditingId(null)
+    setShowForm(false)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    const res = await fetch("/api/income", {
-      method: "POST",
+    const res = await fetch(editingId ? `/api/income?id=${editingId}` : "/api/income", {
+      method: editingId ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     })
     if (res.ok) {
-      toast("収入を登録しました")
-      setForm({ date: new Date().toISOString().split("T")[0], description: "", amount: "", taxRate: "10", category: "売上", memo: "" })
-      setShowForm(false)
+      toast(editingId ? "収入を更新しました" : "収入を登録しました")
+      resetForm()
       await fetchIncomes()
     } else {
-      toast("登録に失敗しました", "error")
+      toast(editingId ? "更新に失敗しました" : "登録に失敗しました", "error")
+    }
+    setLoading(false)
+  }
+
+  const handleEdit = (income: Income) => {
+    setForm({
+      date: income.date.split("T")[0],
+      description: income.description,
+      amount: String(income.amount),
+      taxRate: String(income.taxRate),
+      category: income.category,
+      memo: income.memo ?? "",
+    })
+    setEditingId(income.id)
+    setShowForm(true)
+  }
+
+  const handleCopy = async (income: Income) => {
+    setLoading(true)
+    const res = await fetch("/api/income", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date: new Date().toISOString().split("T")[0],
+        description: income.description,
+        amount: String(income.amount),
+        taxRate: String(income.taxRate),
+        category: income.category,
+        memo: income.memo ?? "",
+      }),
+    })
+    if (res.ok) {
+      toast("コピーして追加しました")
+      await fetchIncomes()
+    } else {
+      toast("コピーに失敗しました", "error")
     }
     setLoading(false)
   }
@@ -92,7 +134,7 @@ export default function IncomePage() {
             className="dark:border-slate-600 dark:text-gray-300">
             <Download className="h-3.5 w-3.5" /> CSV出力
           </Button>
-          <Button size="sm" onClick={() => setShowForm(!showForm)}>
+          <Button size="sm" onClick={() => { if (showForm) { resetForm() } else { setShowForm(true) } }}>
             {showForm ? <ChevronUp className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
             {showForm ? "閉じる" : "追加"}
           </Button>
@@ -101,7 +143,7 @@ export default function IncomePage() {
 
       {showForm && (
         <Card className="mb-5 dark:bg-slate-800 dark:border-slate-700">
-          <CardHeader><CardTitle className="text-sm dark:text-white">収入を追加</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-sm dark:text-white">{editingId ? "収入を編集" : "収入を追加"}</CardTitle></CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <div><Label className="dark:text-gray-300">日付</Label>
@@ -127,8 +169,8 @@ export default function IncomePage() {
               <div><Label className="dark:text-gray-300">メモ</Label>
                 <Input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="任意" className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div className="col-span-2 md:col-span-3 flex gap-2">
-                <Button type="submit" disabled={loading}>{loading ? "保存中..." : "保存"}</Button>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="dark:border-slate-600 dark:text-gray-300">キャンセル</Button>
+                <Button type="submit" disabled={loading}>{loading ? "保存中..." : editingId ? "更新" : "保存"}</Button>
+                <Button type="button" variant="outline" onClick={resetForm} className="dark:border-slate-600 dark:text-gray-300">キャンセル</Button>
               </div>
             </form>
           </CardContent>
@@ -162,9 +204,10 @@ export default function IncomePage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b dark:border-slate-700">
-                    {["日付", "内容", "カテゴリ", "税率", "金額", ""].map((h) => (
+                    {["日付", "内容", "カテゴリ", "税率", "金額"].map((h) => (
                       <th key={h} className="py-2 px-1 text-left text-xs text-gray-500 dark:text-gray-400 font-medium">{h}</th>
                     ))}
+                    <th className="py-2 px-1" /><th className="py-2 px-1" /><th className="py-2 px-1" />
                   </tr>
                 </thead>
                 <tbody>
@@ -177,6 +220,16 @@ export default function IncomePage() {
                       </td>
                       <td className="py-2.5 px-1 text-xs text-gray-500 dark:text-gray-400">{income.taxRate}%</td>
                       <td className="py-2.5 px-1 text-right font-medium text-emerald-600">{formatCurrency(income.amount)}</td>
+                      <td className="py-2.5 px-1">
+                        <button onClick={() => handleEdit(income)} className="text-gray-300 hover:text-blue-500 transition-colors">
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                      </td>
+                      <td className="py-2.5 px-1">
+                        <button onClick={() => handleCopy(income)} disabled={loading} className="text-gray-300 hover:text-emerald-500 transition-colors disabled:opacity-40">
+                          <Copy className="h-3.5 w-3.5" />
+                        </button>
+                      </td>
                       <td className="py-2.5 px-1">
                         <button onClick={() => handleDelete(income.id)} className="text-gray-300 hover:text-red-500 transition-colors">
                           <Trash2 className="h-3.5 w-3.5" />
