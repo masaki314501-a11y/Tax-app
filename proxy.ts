@@ -4,6 +4,8 @@ import type { NextRequest } from "next/server"
 export async function proxy(request: NextRequest) {
   // Proxy context では next/headers が使えないため、req.cookies で直接読む
   const sessionCookie =
+    request.cookies.get("__Secure-authjs.session-token") ??
+    request.cookies.get("authjs.session-token") ??
     request.cookies.get("__Secure-next-auth.session-token") ??
     request.cookies.get("next-auth.session-token")
   const hasSession = !!sessionCookie
