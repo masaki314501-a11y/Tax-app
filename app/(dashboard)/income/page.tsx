@@ -145,7 +145,7 @@ export default function IncomePage() {
         <Card className="mb-5 dark:bg-slate-800 dark:border-slate-700">
           <CardHeader><CardTitle className="text-sm dark:text-white">{editingId ? "収入を編集" : "収入を追加"}</CardTitle></CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <div><Label className="dark:text-gray-300">日付</Label>
                 <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div><Label className="dark:text-gray-300">カテゴリ</Label>
