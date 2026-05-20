@@ -145,17 +145,17 @@ export default function IncomePage() {
         <Card className="mb-5 dark:bg-slate-800 dark:border-slate-700">
           <CardHeader><CardTitle className="text-sm dark:text-white">{editingId ? "収入を編集" : "収入を追加"}</CardTitle></CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6">
-              <div><Label className="dark:text-gray-300">日付</Label>
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">日付</Label>
                 <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="dark:bg-slate-700 dark:border-slate-600" /></div>
-              <div><Label className="dark:text-gray-300">内容</Label>
+              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">内容</Label>
                 <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="売上内容" required className="dark:bg-slate-700 dark:border-slate-600" /></div>
-              <div><Label className="dark:text-gray-300">カテゴリ</Label>
+              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">カテゴリ</Label>
                 <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
                   <SelectTrigger className="dark:bg-slate-700 dark:border-slate-600"><SelectValue /></SelectTrigger>
                   <SelectContent>{INCOME_CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
                 </Select></div>
-              <div><Label className="dark:text-gray-300">消費税率</Label>
+              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">消費税率</Label>
                 <Select value={form.taxRate} onValueChange={(v) => setForm({ ...form, taxRate: v })}>
                   <SelectTrigger className="dark:bg-slate-700 dark:border-slate-600"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -164,9 +164,9 @@ export default function IncomePage() {
                     <SelectItem value="0">非課税</SelectItem>
                   </SelectContent>
                 </Select></div>
-              <div><Label className="dark:text-gray-300">金額（税込・円）</Label>
+              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">金額（税込・円）</Label>
                 <Input type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="110000" required className="dark:bg-slate-700 dark:border-slate-600" /></div>
-              <div><Label className="dark:text-gray-300">メモ</Label>
+              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">メモ</Label>
                 <Input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="任意" className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div className="col-span-full flex gap-2">
                 <Button type="submit" disabled={loading}>{loading ? "保存中..." : editingId ? "更新" : "保存"}</Button>
