@@ -145,9 +145,11 @@ export default function IncomePage() {
         <Card className="mb-5 dark:bg-slate-800 dark:border-slate-700">
           <CardHeader><CardTitle className="text-sm dark:text-white">{editingId ? "収入を編集" : "収入を追加"}</CardTitle></CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 gap-x-6">
               <div><Label className="dark:text-gray-300">日付</Label>
                 <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="dark:bg-slate-700 dark:border-slate-600" /></div>
+              <div><Label className="dark:text-gray-300">内容</Label>
+                <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="売上内容" required className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div><Label className="dark:text-gray-300">カテゴリ</Label>
                 <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
                   <SelectTrigger className="dark:bg-slate-700 dark:border-slate-600"><SelectValue /></SelectTrigger>
@@ -162,8 +164,6 @@ export default function IncomePage() {
                     <SelectItem value="0">非課税</SelectItem>
                   </SelectContent>
                 </Select></div>
-              <div><Label className="dark:text-gray-300">内容</Label>
-                <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="売上内容" required className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div><Label className="dark:text-gray-300">金額（税込・円）</Label>
                 <Input type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="110000" required className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div><Label className="dark:text-gray-300">メモ</Label>
