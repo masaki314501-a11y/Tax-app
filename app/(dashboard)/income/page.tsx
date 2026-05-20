@@ -145,7 +145,7 @@ export default function IncomePage() {
         <Card className="mb-5 dark:bg-slate-800 dark:border-slate-700">
           <CardHeader><CardTitle className="text-sm dark:text-white">{editingId ? "収入を編集" : "収入を追加"}</CardTitle></CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 gap-x-6">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6">
               <div><Label className="dark:text-gray-300">日付</Label>
                 <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div><Label className="dark:text-gray-300">内容</Label>
@@ -168,7 +168,7 @@ export default function IncomePage() {
                 <Input type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="110000" required className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div><Label className="dark:text-gray-300">メモ</Label>
                 <Input value={form.memo} onChange={(e) => setForm({ ...form, memo: e.target.value })} placeholder="任意" className="dark:bg-slate-700 dark:border-slate-600" /></div>
-              <div className="col-span-2 md:col-span-3 flex gap-2">
+              <div className="col-span-full flex gap-2">
                 <Button type="submit" disabled={loading}>{loading ? "保存中..." : editingId ? "更新" : "保存"}</Button>
                 <Button type="button" variant="outline" onClick={resetForm} className="dark:border-slate-600 dark:text-gray-300">キャンセル</Button>
               </div>

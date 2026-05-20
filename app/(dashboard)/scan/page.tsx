@@ -97,7 +97,7 @@ export default function ScanPage() {
     <div>
       <h2 className="text-2xl font-bold text-gray-900 mb-6">📷 レシートスキャン</h2>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* 左: アップロード */}
         <Card>
           <CardHeader><CardTitle className="text-base">レシート写真をアップロード</CardTitle></CardHeader>
@@ -129,7 +129,7 @@ export default function ScanPage() {
                 {scanning ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> AI解析中...</>
                 ) : (
-                  <><Upload className="h-4 w-4" /> Claude AIで解析</>
+                  <><Upload className="h-4 w-4" /> Gemini AIで解析</>
                 )}
               </Button>
             )}
@@ -188,7 +188,7 @@ export default function ScanPage() {
                     <Label>金額（円）</Label>
                     <Input type="number" value={editForm.amount} onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })} />
                   </div>
-                  <div className="col-span-2">
+                  <div className="col-span-full">
                     <Label>内容</Label>
                     <Input value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} />
                   </div>
