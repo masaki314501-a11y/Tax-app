@@ -8,7 +8,11 @@ export async function POST(request: NextRequest) {
 
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
-    return Response.json({ error: "GEMINI_API_KEY が設定されていません" }, { status: 503 })
+    const geminiKeys = Object.keys(process.env).filter(k => k.includes("GEMINI"))
+    return Response.json({
+      error: "GEMINI_API_KEY が設定されていません",
+      hint: geminiKeys.length > 0 ? `検出された類似キー: ${geminiKeys.join(", ")}` : "GEMINI関連の環境変数が一切見つかりません",
+    }, { status: 503 })
   }
 
   const formData = await request.formData()
