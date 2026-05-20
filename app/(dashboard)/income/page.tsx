@@ -146,8 +146,8 @@ export default function IncomePage() {
           <CardHeader><CardTitle className="text-sm dark:text-white">{editingId ? "収入を編集" : "収入を追加"}</CardTitle></CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">日付</Label>
-                <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="dark:bg-slate-700 dark:border-slate-600" /></div>
+              <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3 overflow-hidden"><Label className="dark:text-gray-300">日付</Label>
+                <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required className="min-w-0 dark:bg-slate-700 dark:border-slate-600" /></div>
               <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">内容</Label>
                 <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="売上内容" required className="dark:bg-slate-700 dark:border-slate-600" /></div>
               <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 dark:border-slate-600 p-3"><Label className="dark:text-gray-300">カテゴリ</Label>

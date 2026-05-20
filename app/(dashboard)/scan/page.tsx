@@ -58,7 +58,7 @@ export default function ScanPage() {
     try {
       const res = await fetch("/api/scan", { method: "POST", body: formData })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? "スキャン失敗")
+      if (!res.ok) throw new Error(data.hint ? `${data.error} / ${data.hint}` : (data.error ?? "スキャン失敗"))
       setResult(data)
       setEditForm({
         date: data.date ?? new Date().toISOString().split("T")[0],
